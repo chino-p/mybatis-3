@@ -18,10 +18,14 @@ package org.apache.ibatis.session;
 /**
  * @author Clinton Begin
  */
+// 分页类
 public class RowBounds {
 
+  // offset
   public static final int NO_ROW_OFFSET = 0;
+  // limit
   public static final int NO_ROW_LIMIT = Integer.MAX_VALUE;
+  // 创建一个静态默认对象，方便后期调用RowBounds.DEFAULT
   public static final RowBounds DEFAULT = new RowBounds();
 
   private final int offset;
