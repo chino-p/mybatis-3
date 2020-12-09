@@ -107,19 +107,32 @@ public class XMLConfigBuilder extends BaseBuilder {
   private void parseConfiguration(XNode root) {
     try {
       // issue #117 read properties first
+      // 解析 properties 配置
       propertiesElement(root.evalNode("properties"));
+      // 解析 settings 配置
       Properties settings = settingsAsProperties(root.evalNode("settings"));
+      // 从 settings 中获取vfsImpl并加载
       loadCustomVfs(settings);
+      // 从 settings 中获取logImpl并加载
       loadCustomLogImpl(settings);
+      // 解析 typeAliases 配置
       typeAliasesElement(root.evalNode("typeAliases"));
+      // 解析 plugins 配置
       pluginElement(root.evalNode("plugins"));
+      // 解析 objectFactory 配置
       objectFactoryElement(root.evalNode("objectFactory"));
+      // 解析 objectWrapperFactory 配置
       objectWrapperFactoryElement(root.evalNode("objectWrapperFactory"));
+      // 解析 reflectorFactory 配置
       reflectorFactoryElement(root.evalNode("reflectorFactory"));
+      // settings 中的信息设置到 Configuration 对象中
       settingsElement(settings);
       // read it after objectFactory and objectWrapperFactory issue #631
+      // 解析environments
       environmentsElement(root.evalNode("environments"));
+      // 解析databaseIdProvider
       databaseIdProviderElement(root.evalNode("databaseIdProvider"));
+      // 解析typeHandlers
       typeHandlerElement(root.evalNode("typeHandlers"));
       // 解析<mappers>标签
       mapperElement(root.evalNode("mappers"));
@@ -233,12 +246,15 @@ public class XMLConfigBuilder extends BaseBuilder {
       String resource = context.getStringAttribute("resource");
       // 获取<properties>标签中的url属性
       String url = context.getStringAttribute("url");
+      // 同时传入resource和url则抛出异常
       if (resource != null && url != null) {
         throw new BuilderException("The properties element cannot specify both a URL and a resource based property file reference.  Please specify one or the other.");
       }
       if (resource != null) {
+        // 从文件系统中加载并解析属性文件
         defaults.putAll(Resources.getResourceAsProperties(resource));
       } else if (url != null) {
+        // 从文件系统中加载并解析属性文件
         defaults.putAll(Resources.getUrlAsProperties(url));
       }
       Properties vars = configuration.getVariables();
@@ -246,6 +262,7 @@ public class XMLConfigBuilder extends BaseBuilder {
         defaults.putAll(vars);
       }
       parser.setVariables(defaults);
+      // 将属性值设置到 configuration 中
       configuration.setVariables(defaults);
     }
   }
@@ -372,7 +389,9 @@ public class XMLConfigBuilder extends BaseBuilder {
   private void mapperElement(XNode parent) throws Exception {
     if (parent != null) {
       for (XNode child : parent.getChildren()) {
+        // 如果标签是<package>，则获取name的属性值
         if ("package".equals(child.getName())) {
+          // 得到包名
           String mapperPackage = child.getStringAttribute("name");
           configuration.addMappers(mapperPackage);
         } else {
