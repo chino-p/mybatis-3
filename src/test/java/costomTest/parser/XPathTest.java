@@ -1,6 +1,8 @@
 package costomTest.parser;
 
+import org.junit.Test;
 import org.w3c.dom.Document;
+import org.w3c.dom.NodeList;
 import org.xml.sax.ErrorHandler;
 import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
@@ -8,8 +10,10 @@ import org.xml.sax.SAXParseException;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.xpath.XPath;
+import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathExpression;
 import javax.xml.xpath.XPathFactory;
+import java.io.InputStream;
 
 /**
  * @author chinop
@@ -17,7 +21,9 @@ import javax.xml.xpath.XPathFactory;
  * @date 12/11/2020
  */
 public class XPathTest {
+  @Test
   public void parseTest() throws Exception {
+    InputStream resourceAsStream = XPathTest.class.getClassLoader().getResourceAsStream("inventory.xml");
     DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
     // 开启验证
     documentBuilderFactory.setValidating(true);
@@ -46,13 +52,30 @@ public class XPathTest {
       }
     });
     // 将文档加载到一个Document对象中
-    Document doc = builder.parse("inventory.xml");
+    Document doc = builder.parse(resourceAsStream);
     // 创建XPathFactory
     XPathFactory factory = XPathFactory.newInstance();
     // 创建XPath对象
     XPath xPath = factory.newXPath();
     // 编译XPath表达式
     XPathExpression expr = xPath.compile("//book[author='Neal Stephenson']/title/text()");
-
+    // 通过XPath表达式得到结果，第一个参数指定了XPath表达式进行查询的上下文节点，也就是在指定
+    // 节点下查找符合XPath的节点。本例中的上下文节点是整个文档；第二个参数指定了XPath表达式的返回类型
+    Object result = expr.evaluate(doc, XPathConstants.NODESET);
+    System.out.println("查询作者为Neal Stephenson 的图书的标题：");
+    NodeList nodes = (NodeList) result;
+    for (int i = 0; i < nodes.getLength(); i++) {
+      System.out.println(nodes.item(i).getNodeValue());
+    }
+    System.out.println("查询1997年之后的图书的标题");
+    nodes = (NodeList) xPath.evaluate("//book[@year>1997]/title/text()", doc, XPathConstants.NODESET);
+    for (int i = 0; i < nodes.getLength(); i++) {
+      System.out.println(nodes.item(i).getNodeValue());
+    }
+    System.out.println("查询1997年之后的图书的属性和标题：");
+    nodes = (NodeList) xPath.evaluate("//book[@year>1997]/@*|//book[@year>1997]/title/text()", doc, XPathConstants.NODESET);
+    for (int i = 0; i < nodes.getLength(); i++) {
+      System.out.println(nodes.item(i).getNodeValue());
+    }
   }
 }
