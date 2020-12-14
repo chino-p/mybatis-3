@@ -41,15 +41,21 @@ import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
 
 /**
+ * 封装了XPath、Document和EntityResolver对象用来创建XNode
  * @author Clinton Begin
  * @author Kazuki Shimizu
  */
 public class XPathParser {
 
+  // 文档对象
   private final Document document;
+  // 是否开启校验 DTD校验
   private boolean validation;
+  // 用于加载本地DTD文件
   private EntityResolver entityResolver;
+  // mybatis-config.xml中<properties>标签定义的键值对集合
   private Properties variables;
+  // XPath对象
   private XPath xpath;
 
   public XPathParser(String xml) {
@@ -264,6 +270,7 @@ public class XPathParser {
     }
   }
 
+  // 对Constructor的公共参数设置进行抽取
   private void commonConstructor(boolean validation, Properties variables, EntityResolver entityResolver) {
     this.validation = validation;
     this.entityResolver = entityResolver;

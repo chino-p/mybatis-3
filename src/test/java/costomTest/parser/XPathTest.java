@@ -32,9 +32,13 @@ public class XPathTest {
     documentBuilderFactory.setIgnoringElementContentWhitespace(false);
     documentBuilderFactory.setCoalescing(false);
     documentBuilderFactory.setExpandEntityReferences(true);
+    // 关闭校验就不会去检车DTD和XML配置是否合法
+    // documentBuilderFactory.setValidating(false);
     // 创建DocumentBuilder
     DocumentBuilder builder = documentBuilderFactory.newDocumentBuilder();
     // 设置异常处理对象
+    // 没有设置DTD文件会出现 Document is invalid: no grammar found.
+    // Document root element "xxx", must match DOCTYPE root "null".
     builder.setErrorHandler(new ErrorHandler() {
       @Override
       public void warning(SAXParseException exception) throws SAXException {
