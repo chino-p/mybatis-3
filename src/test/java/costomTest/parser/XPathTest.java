@@ -14,7 +14,6 @@ import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathExpression;
 import javax.xml.xpath.XPathFactory;
 import java.io.InputStream;
-import java.util.List;
 
 /**
  * @author chinop
@@ -83,5 +82,4 @@ public class XPathTest {
       System.out.println(nodes.item(i).getNodeValue());
     }
   }
-
 }
