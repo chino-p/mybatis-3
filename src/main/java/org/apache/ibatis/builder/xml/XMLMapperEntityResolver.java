@@ -58,7 +58,7 @@ public class XMLMapperEntityResolver implements EntityResolver {
     try {
       if (systemId != null) {
         String lowerCaseSystemId = systemId.toLowerCase(Locale.ENGLISH);
-        // 查找systemId指定的DTD文档，并调用getInputSource()方法读取DTD文档
+        // 查找systemId指定的DTD文档，并调用getInputSource()方法读取DTD文档，封装成InputSource对象
         if (lowerCaseSystemId.contains(MYBATIS_CONFIG_SYSTEM) || lowerCaseSystemId.contains(IBATIS_CONFIG_SYSTEM)) {
           return getInputSource(MYBATIS_CONFIG_DTD, publicId, systemId);
         } else if (lowerCaseSystemId.contains(MYBATIS_MAPPER_SYSTEM) || lowerCaseSystemId.contains(IBATIS_MAPPER_SYSTEM)) {
